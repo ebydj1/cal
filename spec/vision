@@ -1,0 +1,18 @@
+Goal
+----
+A calendar program which can:
+  I) handle appointments and tasks specified in a plaintext file
+    A) one-time and
+    B) scheduled
+      1) arbitrarily
+      2) regularly by
+        a) day of week
+        b) day of month (like a meniversary)
+        c) day of month (like First Fridays or Thanksgiving)
+        d) day of year
+        e) relative to any of these (like Thursday before First Friday, or
+           Friday after last completion)
+        f) goal: an automated liturgical calendar or school schedule
+  II) display them
+    A) in a GUI
+    B) with curses

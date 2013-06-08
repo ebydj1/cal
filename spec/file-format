@@ -1,0 +1,33 @@
+File formatting rules
+---------------------
+Fields:
+  Title
+  Notes
+  Occurrence
+  Negcurrence
+  Inherits
+
+Field syntax
+------------
+Title - to end of line
+Notes - next line to End Notes label, plaintext
+Occurrence - next line to End Occurrence label, subcommands
+  On date, absolute
+  Start date, absolute or relative
+  End date, absolute or relative
+  Recur relative rule
+    next day/week/month/year
+    to day/week/month
+    prev day/week/month
+    set
+Negcurrence - same as Occurrence, end at End Negcurrence label
+Inherits - <file>.<type>
+# So, BD Adoration could be
+#   to day 1
+#   to Friday
+#   prev day
+#   set
+# Easter is NASTY. See www.assa.org.au/edm for help.
+# Let's start with just absolute dates and see where it goes from there.
+# Also, let's start by ignoring negcurrence (setting a blackout period) and
+# inheritance. Inheritance will require scans for loops and stuff like that...
