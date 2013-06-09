@@ -26,6 +26,12 @@ class Dt
 public:
   Err dtSet(int y_, int m_, int d_);
   int weekday();
+  bool operator<(const Dt&);
+  bool operator>(const Dt&);
+  bool operator<=(const Dt&);
+  bool operator>=(const Dt&);
+  bool operator==(const Dt&);
+  bool operator!=(const Dt&);
 private:
   int y;
   int m;
