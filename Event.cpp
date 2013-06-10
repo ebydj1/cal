@@ -4,15 +4,56 @@
 using std::istringstream;
 using std::ostringstream;
 
+bool parseDate(int& year, int& month, int& day, string date)
+{
+  string parser = date;
+  for (string::iterator si = parser.begin(); si != parser.end(); ++si)
+    if (isalpha(*si))
+      *si = 'a';
+    else if (isdigit(*si))
+      *si = '0';
+  if (parser != "aaa 00, 0000" && parser != "aaa 0, 0000")
+    return false;
+
+  for (string::iterator si = date.begin(); si != date.end(); ++si)
+    *si = tolower(*si);
+
+  istringstream streamdate(date);
+  string smonth;
+  streamdate >> smonth;
+  if (smonth == "jan") month = Jan;
+  else if (smonth == "feb") month = Feb;
+  else if (smonth == "mar") month = Mar;
+  else if (smonth == "apr") month = Apr;
+  else if (smonth == "may") month = May;
+  else if (smonth == "jun") month = Jun;
+  else if (smonth == "jul") month = Jul;
+  else if (smonth == "aug") month = Aug;
+  else if (smonth == "sep") month = Sep;
+  else if (smonth == "oct") month = Oct;
+  else if (smonth == "nov") month = Nov;
+  else if (smonth == "dec") month = Dec;
+  else return false;
+
+  streamdate >> day;
+
+  char junk;
+  streamdate.get(junk);
+  streamdate.get(junk);
+
+  streamdate >> year;
+
+  return true;
+}
+
 Event::Event(Cal* pcal_) : pcal(pcal_) {}
 
 vector<string> Event::read(istream& in)
 {
   string token;
   vector<string> retval;
-  while (in)
+  while (in >> token)
   {
-    in >> token;
     if (token == "Title")
       getline(in, t);
     else if (token == "Notes")
@@ -38,60 +79,12 @@ vector<string> Event::read(istream& in)
     {
       getline(in, token);
       token = token.substr(1);
-      string parser = token;
-      for (string::iterator si = parser.begin(); si != parser.end(); ++si)
-        if (isalpha(*si))
-          *si = 'a';
-        else if (isdigit(*si))
-          *si = '0';
-      if (parser != "aaa 00, 0000" && parser != "aaa 0, 0000")
-        retval.push_back(string("Invalid date ").append(token));
+      int year, month, day;
+      if (parseDate(year, month, day, token) == false)
+        retval.push_back(string("Date ").append(token).append(" invalid"));
       else
       {
-        for (string::iterator si = token.begin(); si != token.end(); ++si)
-          *si = tolower(*si);
-        istringstream date(token);
-        string smonth;
-        char junk;
-        int month;
-        int day;
-        int year;
-        date >> smonth;
-        if (smonth == "jan")
-          month = Jan;
-        else if (smonth == "feb")
-          month = Feb;
-        else if (smonth == "mar")
-          month = Mar;
-        else if (smonth == "apr")
-          month = Apr;
-        else if (smonth == "may")
-          month = May;
-        else if (smonth == "jun")
-          month = Jun;
-        else if (smonth == "jul")
-          month = Jul;
-        else if (smonth == "aug")
-          month = Aug;
-        else if (smonth == "sep")
-          month = Sep;
-        else if (smonth == "oct")
-          month = Oct;
-        else if (smonth == "nov")
-          month = Nov;
-        else if (smonth == "dec")
-          month = Dec;
-        else
-        {
-          retval.push_back(string("Invalid month ").append(smonth));
-          continue;
-        }
-        date >> day;
-        date.get(junk);
-        date.get(junk);
-        date >> year;
-        Err e;
-        e = dt.dtSet(year, month, day);
+        Err e = dt.dtSet(year, month, day);
         if (e.type == invalid_yr)
         {
           string syear;
@@ -108,6 +101,7 @@ vector<string> Event::read(istream& in)
         }
       }
     }
+    else retval.push_back(string("Token \"").append(token).append("\" not recognized"));
   }
   if (pcal)
     pcal->add(dt, this);
