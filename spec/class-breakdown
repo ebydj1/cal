@@ -1,0 +1,23 @@
+Classes
+-------
+Dt - to handle date management stuff
+Event - store commands from files to generate calendar events
+Cal - organize calendar events
+
+Event
+-----
+read files described in file-format
+store recurrence generation parameters
+when requested, manipulate generation parameters to generate event Dt's
+generate specific Event's for Cal
+
+Cal
+---
+organize events by date and time
+contains set of Dt's with linked Event's
+
+Dt
+--
+verify dates are valid
+gracefully handle Recur commands
+provide weekday for a yearday

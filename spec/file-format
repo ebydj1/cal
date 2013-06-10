@@ -16,10 +16,16 @@ Occurrence - next line to End Occurrence label, subcommands
   Start date, absolute or relative
   End date, absolute or relative
   Recur relative rule
-    next day/week/month/year
-    to day/week/month
-    prev day/week/month
-    set
+    every {day/week/month/year}
+    next {day/week/month/year} - plus 1 day, 7 days, or 1 month
+    to {day #/week #/month Name} - will stick in same level of next higher:
+                        to day 1 will always move to day 1 of current month
+                        to week 1 will always move to current day of week 1 of
+                           current month
+                        to month Jun will always move to current day in June of
+                           current year
+    prev {day/week/month} - minus 1 day, 7 days, or 1 month
+    set - have to finish a repetition rule with this to set the date
 Negcurrence - same as Occurrence, end at End Negcurrence label
 Inherits - <file>.<type>
 # So, BD Adoration could be
