@@ -46,9 +46,7 @@ bool parseDate(int& year, int& month, int& day, string date)
   return true;
 }
 
-Event::Event(Cal* pcal_) : pcal(pcal_) {}
-
-void readTitle(vector<string>& retval, string& title, istream& in)
+void readTitle(vector<string>& errors, string& title, istream& in)
 {
   char junk;
   in.get(junk);
@@ -58,7 +56,7 @@ void readTitle(vector<string>& retval, string& title, istream& in)
   return;
 }
 
-void readNotes(vector<string>& retval, string& notes, istream& in)
+void readNotes(vector<string>& errors, string& notes, istream& in)
 {
   string line;
   getline(in, line);
@@ -71,7 +69,7 @@ void readNotes(vector<string>& retval, string& notes, istream& in)
   {
     if (!in)
     {
-      retval.push_back("No \"EndNotes\" token found");
+      errors.push_back("No \"EndNotes\" token found");
       return;
     }
     notes.append(line);
@@ -80,64 +78,68 @@ void readNotes(vector<string>& retval, string& notes, istream& in)
   return;
 }
 
+void readDate(vector<string>& errors, Dt& date, istream& in)
+{
+  string sdate;
+  getline(in, sdate);
+  sdate = sdate.substr(1);
+  int year, month, day;
+  if (parseDate(year, month, day, sdate) == false)
+    errors.push_back(string("Date ").append(sdate).append(" invalid"));
+  else
+  {
+    Err e = date.dtSet(year, month, day);
+    if (e.type == invalid_yr)
+    {
+      string syear;
+      ostringstream os(syear);
+      os << year;
+      errors.push_back(string("Invalid year ").append(syear));
+    }
+    else if (e.type == invalid_day)
+    {
+      string sday;
+      ostringstream os(sday);
+      os << day;
+      errors.push_back(string("Invalid day ").append(sday));
+    }
+  }
+}
+
+Event::Event(Cal* pcal_) : pcal(pcal_) {}
+
 vector<string> Event::read(istream& in)
 {
   string token;
-  vector<string> retval;
+  vector<string> errors;
   while (in >> token)
   {
     if (token == "Title")
-      readTitle(retval, t, in);
+      readTitle(errors, t, in);
     else if (token == "Notes")
-      readNotes(retval, n, in);
+      readNotes(errors, n, in);
     else if (token == "Occurrence")
     {
       getline(in, token);
       if (token != "")
-        retval.push_back(string("Text \"").append(token).append(" ignored"));
+        errors.push_back(string("Text \"").append(token).append(" ignored"));
       while (in >> token, token != "EndOccurrence")
       {
         if (!in)
-        {
-          retval.push_back("No \"EndOccurrence\" token found");
-        }
+          errors.push_back("No \"EndOccurrence\" token found");
         else if (token == "On")
-        {
-          getline(in, token);
-          token = token.substr(1);
-          int year, month, day;
-          if (parseDate(year, month, day, token) == false)
-            retval.push_back(string("Date ").append(token).append(" invalid"));
-          else
-          {
-            Err e = dt.dtSet(year, month, day);
-            if (e.type == invalid_yr)
-            {
-              string syear;
-              ostringstream os(syear);
-              os << year;
-              retval.push_back(string("Invalid year ").append(syear));
-            }
-            else if (e.type == invalid_day)
-            {
-              string sday;
-              ostringstream os(sday);
-              os << day;
-              retval.push_back(string("Invalid day ").append(sday));
-            }
-          }
-        }
+          readDate(errors, dt, in);
       }
     }
     else
     {
-      retval.push_back(string("Token \"").append(token).append("\" not recognized"));
+      errors.push_back(string("Token \"").append(token).append("\" not recognized"));
       getline(in, token);
     }
   }
   if (pcal)
     pcal->add(dt, this);
-  return retval;
+  return errors;
 }
 
 string Event::title() const
