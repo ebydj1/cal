@@ -4,6 +4,8 @@
 using std::istringstream;
 using std::ostringstream;
 
+Event::Event(Cal* pcal_) : pcal(pcal_) {}
+
 vector<string> Event::read(istream& in)
 {
   string token;
@@ -107,6 +109,23 @@ vector<string> Event::read(istream& in)
       }
     }
   }
+  if (pcal)
+    pcal->add(dt, this);
 endEventRead:
   return retval;
+}
+
+string Event::title() const
+{
+  return t;
+}
+
+string Event::notes() const
+{
+  return n;
+}
+
+Dt Event::date() const
+{
+  return dt;
 }

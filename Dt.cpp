@@ -31,14 +31,14 @@ Err Dt::dtSet(int y_, int m_, int d_)
   return Err();
 }
 
-int Dt::weekday()
+int Dt::weekday() const
 {
   return (Mon + y-1900 + nleap(1900, m > Feb ? y : y-1) + doy[m] + d) % 7;
 }
 
-bool Dt::operator<(const Dt& rval)
+bool Dt::operator<(const Dt& rval) const
 {
-  Dt& lval = *this;
+  const Dt& lval = *this;
   if (lval.y < rval.y)
     return true;
   if (lval.y > rval.y)
@@ -52,9 +52,9 @@ bool Dt::operator<(const Dt& rval)
   return false;
 }
 
-bool Dt::operator>(const Dt& rval)
+bool Dt::operator>(const Dt& rval) const
 {
-  Dt& lval = *this;
+  const Dt& lval = *this;
   if (lval.y > rval.y)
     return true;
   if (lval.y < rval.y)
@@ -68,9 +68,9 @@ bool Dt::operator>(const Dt& rval)
   return false;
 }
 
-bool Dt::operator<=(const Dt& rval)
+bool Dt::operator<=(const Dt& rval) const
 {
-  Dt& lval = *this;
+  const Dt& lval = *this;
   if (lval.y > rval.y)
     return false;
   if (lval.y < rval.y)
@@ -84,9 +84,9 @@ bool Dt::operator<=(const Dt& rval)
   return true;
 }
 
-bool Dt::operator>=(const Dt& rval)
+bool Dt::operator>=(const Dt& rval) const
 {
-  Dt& lval = *this;
+  const Dt& lval = *this;
   if (lval.y < rval.y)
     return false;
   if (lval.y > rval.y)
@@ -100,14 +100,14 @@ bool Dt::operator>=(const Dt& rval)
   return true;
 }
 
-bool Dt::operator==(const Dt& rval)
+bool Dt::operator==(const Dt& rval) const
 {
-  Dt& lval = *this;
+  const Dt& lval = *this;
   return lval.y == rval.y && lval.m == rval.m && lval.d == rval.d;
 }
 
-bool Dt::operator!=(const Dt& rval)
+bool Dt::operator!=(const Dt& rval) const
 {
-  Dt& lval = *this;
+  const Dt& lval = *this;
   return lval.y != rval.y || lval.m != rval.m || lval.d != rval.d;
 }
