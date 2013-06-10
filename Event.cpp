@@ -106,6 +106,12 @@ void readDate(vector<string>& errors, Dt& date, istream& in)
   }
 }
 
+void readInvalid(vector<string>& errors, string token, istream& in)
+{
+  errors.push_back(string("Token \"").append(token).append("\" not recognized"));
+  getline(in, token);
+}
+
 Event::Event(Cal* pcal_) : pcal(pcal_) {}
 
 vector<string> Event::read(istream& in)
@@ -129,13 +135,12 @@ vector<string> Event::read(istream& in)
           errors.push_back("No \"EndOccurrence\" token found");
         else if (token == "On")
           readDate(errors, dt, in);
+        else
+          readInvalid(errors, token, in);
       }
     }
     else
-    {
-      errors.push_back(string("Token \"").append(token).append("\" not recognized"));
-      getline(in, token);
-    }
+      readInvalid(errors, token, in);
   }
   if (pcal)
     pcal->add(dt, this);
