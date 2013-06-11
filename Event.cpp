@@ -15,24 +15,21 @@ bool parseDate(int& year, int& month, int& day, string date)
   if (parser != "aaa 00, 0000" && parser != "aaa 0, 0000")
     return false;
 
-  for (string::iterator si = date.begin(); si != date.end(); ++si)
-    *si = tolower(*si);
-
   istringstream streamdate(date);
   string smonth;
   streamdate >> smonth;
-  if (smonth == "jan") month = Jan;
-  else if (smonth == "feb") month = Feb;
-  else if (smonth == "mar") month = Mar;
-  else if (smonth == "apr") month = Apr;
-  else if (smonth == "may") month = May;
-  else if (smonth == "jun") month = Jun;
-  else if (smonth == "jul") month = Jul;
-  else if (smonth == "aug") month = Aug;
-  else if (smonth == "sep") month = Sep;
-  else if (smonth == "oct") month = Oct;
-  else if (smonth == "nov") month = Nov;
-  else if (smonth == "dec") month = Dec;
+  if (smonth == "Jan") month = Jan;
+  else if (smonth == "Feb") month = Feb;
+  else if (smonth == "Mar") month = Mar;
+  else if (smonth == "Apr") month = Apr;
+  else if (smonth == "May") month = May;
+  else if (smonth == "Jun") month = Jun;
+  else if (smonth == "Jul") month = Jul;
+  else if (smonth == "Aug") month = Aug;
+  else if (smonth == "Sep") month = Sep;
+  else if (smonth == "Oct") month = Oct;
+  else if (smonth == "Nov") month = Nov;
+  else if (smonth == "Dec") month = Dec;
   else return false;
 
   streamdate >> day;
@@ -148,13 +145,13 @@ vector<string> Event::read(istream& in)
           readDate(errors, begin, in);
         else if (token == "End")
           readDate(errors, end, in);
-        else if (token == "set")
+        else if (token == "Set")
         {
           readBlankLine(errors, in);
           if (dt != Dt())
             dts.push_back(dt);
           else
-            errors.push_back(string("Token \"set\" found without date"));
+            errors.push_back(string("Token \"Set\" found without date"));
         }
         else
           readInvalid(errors, token, in);
