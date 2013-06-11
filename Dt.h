@@ -26,6 +26,7 @@ struct Err
 class Dt
 {
 public:
+  Dt() : y(0), m(0), d(0) {}
   Err dtSet(int y_, int m_, int d_);
   Err addDays(int);
   Err addMonths(int);

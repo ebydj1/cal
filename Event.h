@@ -15,14 +15,14 @@ public:
   Event(Cal*);
   vector<string> read(istream&);
 
-  string title() const;
-  string notes() const;
-  Dt     date()  const;
+  string     title() const;
+  string     notes() const;
+  vector<Dt> dates() const;
 private:
   Cal*   pcal;
 
-  string t;
-  string n;
-  Dt     dt;
+  string     t;
+  string     n;
+  vector<Dt> dts;
 };
 #endif

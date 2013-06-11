@@ -85,7 +85,7 @@ void readDate(vector<string>& errors, Dt& date, istream& in)
   sdate = sdate.substr(1);
   int year, month, day;
   if (parseDate(year, month, day, sdate) == false)
-    errors.push_back(string("Date ").append(sdate).append(" invalid"));
+    errors.push_back(string("Date ") + sdate + string(" invalid"));
   else
   {
     Err e = date.dtSet(year, month, day);
@@ -94,22 +94,30 @@ void readDate(vector<string>& errors, Dt& date, istream& in)
       string syear;
       ostringstream os(syear);
       os << year;
-      errors.push_back(string("Invalid year ").append(syear));
+      errors.push_back(string("Invalid year ") + syear);
     }
     else if (e.type == invalid_day)
     {
       string sday;
       ostringstream os(sday);
       os << day;
-      errors.push_back(string("Invalid day ").append(sday));
+      errors.push_back(string("Invalid day ") + sday);
     }
   }
 }
 
 void readInvalid(vector<string>& errors, string token, istream& in)
 {
-  errors.push_back(string("Token \"").append(token).append("\" not recognized"));
+  errors.push_back(string("Token \"") + token + string("\" not recognized"));
   getline(in, token);
+}
+
+void readBlankLine(vector<string>& errors, istream& in)
+{
+  string junk;
+  getline(in, junk);
+  if (junk != "")
+    errors.push_back(string("Text \"") + junk.substr(1) + string("\" ignored"));
 }
 
 Event::Event(Cal* pcal_) : pcal(pcal_) {}
@@ -118,6 +126,9 @@ vector<string> Event::read(istream& in)
 {
   string token;
   vector<string> errors;
+  Dt begin, end, dt;
+  begin.dtSet(1900, Jan, 1);
+  end.dtSet(2100, Dec, 31);
   while (in >> token)
   {
     if (token == "Title")
@@ -126,15 +137,25 @@ vector<string> Event::read(istream& in)
       readNotes(errors, n, in);
     else if (token == "Occurrence")
     {
-      getline(in, token);
-      if (token != "")
-        errors.push_back(string("Text \"").append(token).append(" ignored"));
+      readBlankLine(errors, in);
       while (in >> token, token != "EndOccurrence")
       {
         if (!in)
           errors.push_back("No \"EndOccurrence\" token found");
         else if (token == "On")
           readDate(errors, dt, in);
+        else if (token == "Begin")
+          readDate(errors, begin, in);
+        else if (token == "End")
+          readDate(errors, end, in);
+        else if (token == "set")
+        {
+          readBlankLine(errors, in);
+          if (dt != Dt())
+            dts.push_back(dt);
+          else
+            errors.push_back(string("Token \"set\" found without date"));
+        }
         else
           readInvalid(errors, token, in);
       }
@@ -143,7 +164,8 @@ vector<string> Event::read(istream& in)
       readInvalid(errors, token, in);
   }
   if (pcal)
-    pcal->add(dt, this);
+    for (vector<Dt>::iterator di = dts.begin(); di != dts.end(); ++di)
+      pcal->add(*di, this);
   return errors;
 }
 
@@ -157,7 +179,7 @@ string Event::notes() const
   return n;
 }
 
-Dt Event::date() const
+vector<Dt> Event::dates() const
 {
-  return dt;
+  return dts;
 }
