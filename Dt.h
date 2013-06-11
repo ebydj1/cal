@@ -2,12 +2,12 @@
 #define DT_H
 enum Func
 {
-  goodf = 0, dt_set
+  goodf = 0, dt_set, add_days, add_months, add_years
 };
 
 enum Type
 {
-  goodt = 0, invalid_yr, invalid_day
+  goodt = 0, invalid_yr, invalid_day, overflow, underflow
 };
 
 const int Jan = 0, Feb = 1, Mar = 2, Apr = 3, May = 4, Jun = 5, Jul = 6,
@@ -27,7 +27,15 @@ class Dt
 {
 public:
   Err dtSet(int y_, int m_, int d_);
+  Err addDays(int);
+  Err addMonths(int);
+  Err addYears(int);
+
+  int year() const;
+  int month() const;
+  int day() const;
   int weekday() const;
+
   bool operator<(const Dt&) const;
   bool operator>(const Dt&) const;
   bool operator<=(const Dt&) const;

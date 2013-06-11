@@ -3,15 +3,20 @@
 using std::cout;
 using std::endl;
 
-int doy[] = {0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365};
+int ydom[] = {0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365};
 
 inline bool leap(int y) { return !(y % 400) || !(y % 4) && (y % 100); }
 
-inline int diny(int year) { return 365 + (leap(year) ? 1 : 0); }
+inline int diny(int y) { return 365 + (leap(y) ? 1 : 0); }
 
-inline int dinm(int year, int month)
+inline int dinm(int y, int m)
 {
-  return (!leap(year) || month != Feb) ? doy[month + 1] - doy[month] : 29;
+  return (!leap(y) || m!= Feb) ? ydom[m + 1] - ydom[m] : 29;
+}
+
+inline int doy(int y, int m, int d)
+{
+  return ydom[m] + d + ((leap(y) && m > Feb) ? 1 : 0);
 }
 
 inline int nmult(int start, int end, int factor)
@@ -38,9 +43,96 @@ Err Dt::dtSet(int y_, int m_, int d_)
   return Err();
 }
 
+Err Dt::addDays(int n)
+{
+  int ynew = y, mnew = m, dnew = d;
+  while (n != 0)
+  {
+    while (n > 0)
+    {
+      while (n >= diny(ynew) - doy(ynew, mnew, dnew))
+        if (mnew < Feb)
+          n -= diny(ynew++);
+        else
+          n -= diny(++ynew);
+      while (n >= dinm(ynew, mnew) - dnew)
+        n -= dinm(ynew, mnew++);
+      if (n > 0)
+      {
+        dnew += n;
+        n = 0;
+      }
+    }
+    while (n < 0)
+    {
+      while (n < -doy(ynew, mnew, dnew))
+        if (mnew < Feb)
+          n += diny(--ynew);
+        else
+          n += diny(ynew--);
+      while (n < -dnew)
+        n += dinm(ynew, --mnew);
+      if (n < 0)
+      {
+        dnew += n;
+        n = 0;
+      }
+    }
+  }
+  if (ynew < 1900)
+    return Err(add_days, underflow);
+  else if (ynew > 2100)
+    return Err(add_days, overflow);
+  y = ynew;
+  m = mnew;
+  d = dnew;
+  return Err();
+}
+
+Err Dt::addMonths(int n)
+{
+  int ynew = y, mnew = m;
+  if (n >= 12 - mnew)
+  {
+    n += mnew;
+    mnew = 0;
+    ynew = y + n / 12;
+    n %= 12;
+  }
+  else if (n < -mnew)
+  {
+    ynew = y - -n / 12 - 1;
+    n = -(-n % 12);
+    mnew = m + 12;
+  }
+  mnew += n;
+  if (ynew < 1900)
+    return Err(add_months, underflow);
+  else if (ynew > 2100)
+    return Err(add_months, overflow);
+  y = ynew;
+  m = mnew;
+  return Err();
+}
+
+Err Dt::addYears(int n)
+{
+  int ynew = y + n;
+  if (ynew < 1900)
+    return Err(add_years, underflow);
+  else if (ynew > 2100)
+    return Err(add_years, overflow);
+  y = ynew;
+  return Err();
+}
+
+int Dt::year() const { return y; }
+int Dt::month() const { return m; }
+int Dt::day() const { return d + 1; }
+
 int Dt::weekday() const
 {
-  return (Mon + y-1900 + nleap(1900, m > Feb ? y : y-1) + doy[m] + d) % 7;
+  return (Mon + y-1900 + nleap(1900, m > Feb ? y : y-1) + ydom[m] + d) % 7;
 }
 
 bool Dt::operator<(const Dt& rval) const
