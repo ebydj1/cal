@@ -117,8 +117,6 @@ void readBlankLine(vector<string>& errors, istream& in)
     errors.push_back(string("Text \"") + junk.substr(1) + string("\" ignored"));
 }
 
-Event::Event(Cal* pcal_) : pcal(pcal_) {}
-
 vector<string> Event::read(istream& in)
 {
   string token;
@@ -160,23 +158,20 @@ vector<string> Event::read(istream& in)
     else
       readInvalid(errors, token, in);
   }
-  if (pcal)
-    for (vector<Dt>::iterator di = dts.begin(); di != dts.end(); ++di)
-      pcal->add(*di, this);
   return errors;
 }
 
-string Event::title() const
+const string& Event::title() const
 {
   return t;
 }
 
-string Event::notes() const
+const string& Event::notes() const
 {
   return n;
 }
 
-vector<Dt> Event::dates() const
+const vector<Dt>& Event::dates() const
 {
   return dts;
 }
