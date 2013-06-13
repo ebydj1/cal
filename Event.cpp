@@ -120,7 +120,10 @@ void readBlankLine(vector<string>& errors, istream& in)
 class On : public Command
 {
 public:
-  On(const Dt& dt_) : dt(dt_) {}
+  On(vector<string>& errors, istream& in)
+  {
+    readDate(errors, dt, in);
+  }
   void execute(State& state, vector<Dt>& dts, vector<string>& errors)
   {
     state.dt = dt;
@@ -132,7 +135,10 @@ private:
 class Begin : public Command
 {
 public:
-  Begin(const Dt& begin_) : begin(begin_) {}
+  Begin(vector<string>& errors, istream& in)
+  {
+    readDate(errors, begin, in);
+  }
   void execute(State& state, vector<Dt>& dts, vector<string>& errors)
   {
     state.begin = begin;
@@ -144,7 +150,10 @@ private:
 class End : public Command
 {
 public:
-  End(const Dt& end_) : end(end_) {}
+  End(vector<string>& errors, istream& in)
+  {
+    readDate(errors, end, in);
+  }
   void execute(State& state, vector<Dt>& dts, vector<string>& errors)
   {
     state.end = end;
@@ -156,6 +165,10 @@ private:
 class Set : public Command
 {
 public:
+  Set(vector<string>& errors, istream& in)
+  {
+    readBlankLine(errors, in);
+  }
   void execute(State& state, vector<Dt>& dts, vector<string>& errors)
   {
     if (state.dt != Dt())
@@ -189,25 +202,13 @@ vector<string> Event::read(istream& in)
         if (!in)
           errors.push_back("No \"EndOccurrence\" token found");
         else if (token == "On")
-        {
-          readDate(errors, dt, in);
-          commands.push_back(new On(dt));
-        }
+          commands.push_back(new On(errors, in));
         else if (token == "Begin")
-        {
-          readDate(errors, dt, in);
-          commands.push_back(new Begin(dt));
-        }
+          commands.push_back(new Begin(errors, in));
         else if (token == "End")
-        {
-          readDate(errors, dt, in);
-          commands.push_back(new End(dt));
-        }
+          commands.push_back(new End(errors, in));
         else if (token == "Set")
-        {
-          readBlankLine(errors, in);
-          commands.push_back(new Set());
-        }
+          commands.push_back(new Set(errors, in));
         else
           readInvalid(errors, token, in);
       }
