@@ -18,9 +18,10 @@ Occurrence - next line to End Occurrence label, subcommands
   Recur relative rule
     Every {day/week/month/year}
     If {</>/=} {date or reference to date from another object}
+    While {</>/=}
     Do - marks beginning of a repeatable block, such as after Every
     Done - marks end of repeatable block
-    Next {day/week/month/year} - plus 1 day, 7 days, or 1 month
+    Next {number} {day/week/month/year}(s) - number assumed to be 1, s optional
     To {day #/week #/month Name} - will stick in same level of next higher:
                         to day 1 will always move to day 1 of current month
                         to week 1 will always move to current day of week 1 of
