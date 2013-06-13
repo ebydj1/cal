@@ -66,6 +66,34 @@ bool parseDate(int& year, int& month, int& day, string date)
   return true;
 }
 
+enum RelTypes
+{
+  Day, Week, Month, Year
+};
+
+bool parseRel(int& num, int& type, string rel)
+{
+  string parsedrel = parseHelp(rel);
+  if (parsedrel != "0 a" && parsedrel != "a")
+    return false;
+
+  istringstream ssrel(rel);
+
+  if (parsedrel == "0 a")
+    ssrel >> num;
+  else num = 1;
+
+  string stype;
+  ssrel >> stype;
+  if (stype == "day" || stype == "days") type = Day;
+  else if (stype == "week" || stype == "weeks") type = Week;
+  else if (stype == "month" || stype == "months") type = Month;
+  else if (stype == "year" || stype == "years") type = Year;
+  else return false;
+
+  return true;
+}
+
 void readTitle(vector<string>& errors, string& title, istream& in)
 {
   char junk;
@@ -124,6 +152,15 @@ void readDate(vector<string>& errors, Dt& date, istream& in)
       errors.push_back(string("Invalid day ") + sday);
     }
   }
+}
+
+void readRel(vector<string>& errors, int& num, int& type, istream& in)
+{
+  string srel;
+  getline(in, srel);
+  srel = srel.substr(1);
+  if (parseRel(num, type, srel) == false)
+    errors.push_back(string("Relative date ") + srel + string(" invalid"));
 }
 
 void readInvalid(vector<string>& errors, string token, istream& in)
@@ -185,6 +222,90 @@ private:
   Dt end;
 };
 
+class Next : public Command
+{
+public:
+  Next(vector<string>& errors, istream& in)
+  {
+    readRel(errors, num, type, in);
+  }
+  void execute(State& state, vector<Dt>& dts, vector<string>& errors)
+  {
+    Err e;
+    Dt dttemp = state.dt;
+    if (type == Day)
+      e = dttemp.addDays(num);
+    else if (type == Week)
+      e = dttemp.addDays(num*7);
+    else if (type == Month)
+      e = dttemp.addMonths(num);
+    else if (type == Year)
+      e = dttemp.addYears(num);
+    if (e.type == overflow)
+    {
+      string output;
+      ostringstream ssoutput(output);
+      ssoutput << "Command \"Next " << num << " ";
+      if (type == Day)
+        ssoutput << "day";
+      else if (type == Week)
+        ssoutput << "week";
+      else if (type == Month)
+        ssoutput << "month";
+      else if (type == Year)
+        ssoutput << "year";
+      ssoutput << " generated an invalid date";
+      errors.push_back(output);
+    }
+    else state.dt = dttemp;
+  }
+private:
+  int num;
+  int type;
+};
+
+class Prev : public Command
+{
+public:
+  Prev(vector<string>& errors, istream& in)
+  {
+    readRel(errors, num, type, in);
+  }
+  void execute(State& state, vector<Dt>& dts, vector<string>& errors)
+  {
+    Err e;
+    Dt dttemp = state.dt;
+    if (type == Day)
+      e = dttemp.addDays(-num);
+    else if (type == Week)
+      e = dttemp.addDays(-num*7);
+    else if (type == Month)
+      e = dttemp.addMonths(-num);
+    else if (type == Year)
+      e = dttemp.addYears(-num);
+    if (e.type == underflow)
+    {
+      string output;
+      ostringstream ssoutput(output);
+      ssoutput << "Command \"Prev " << num << " ";
+      if (type == Day)
+        ssoutput << "day";
+      else if (type == Week)
+        ssoutput << "week";
+      else if (type == Month)
+        ssoutput << "month";
+      else if (type == Year)
+        ssoutput << "year";
+      ssoutput << " generated an invalid date";
+      errors.push_back(output);
+    }
+    else state.dt = dttemp;
+  }
+private:
+  int num;
+  int type;
+};
+
 class Set : public Command
 {
 public:
@@ -220,7 +341,7 @@ vector<string> Event::read(istream& in)
     else if (token == "Occurrence")
     {
       readBlankLine(errors, in);
-      while (in >> token, token != "EndOccurrence")
+      while (in >> token && token != "EndOccurrence")
       {
         if (!in)
           errors.push_back("No \"EndOccurrence\" token found");
@@ -230,6 +351,10 @@ vector<string> Event::read(istream& in)
           commands.push_back(new Begin(errors, in));
         else if (token == "End")
           commands.push_back(new End(errors, in));
+        else if (token == "Next")
+          commands.push_back(new Next(errors, in));
+        else if (token == "Prev")
+          commands.push_back(new Prev(errors, in));
         else if (token == "Set")
           commands.push_back(new Set(errors, in));
         else
