@@ -4,20 +4,25 @@
 using std::istringstream;
 using std::ostringstream;
 
-bool parseDate(int& year, int& month, int& day, string date)
+string parseHelp(string str)
 {
-  string parser = date;
-  for (string::iterator si = parser.begin(); si != parser.end(); ++si)
+  for (string::iterator si = str.begin(); si != str.end(); ++si)
     if (isalpha(*si))
       *si = 'a';
     else if (isdigit(*si))
       *si = '0';
-  if (parser != "aaa 00, 0000" && parser != "aaa 0, 0000")
+  return str;
+}
+
+bool parseDate(int& year, int& month, int& day, string date)
+{
+  string parseddate = parseHelp(date);
+  if (parseddate != "aaa 00, 0000" && parseddate != "aaa 0, 0000")
     return false;
 
-  istringstream streamdate(date);
+  istringstream ssdate(date);
   string smonth;
-  streamdate >> smonth;
+  ssdate >> smonth;
   if (smonth == "Jan") month = Jan;
   else if (smonth == "Feb") month = Feb;
   else if (smonth == "Mar") month = Mar;
@@ -32,13 +37,13 @@ bool parseDate(int& year, int& month, int& day, string date)
   else if (smonth == "Dec") month = Dec;
   else return false;
 
-  streamdate >> day;
+  ssdate >> day;
 
   char junk;
-  streamdate.get(junk);
-  streamdate.get(junk);
+  ssdate.get(junk);
+  ssdate.get(junk);
 
-  streamdate >> year;
+  ssdate >> year;
 
   return true;
 }
