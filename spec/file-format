@@ -13,7 +13,7 @@ Title - to end of line
 Notes - next line to End Notes label, plaintext
 Occurrence - next line to End Occurrence label, subcommands
   On date, absolute
-  Start date, absolute or relative
+  Begin date, absolute or relative
   End date, absolute or relative
   Recur relative rule
     Every {day/week/month/year}
