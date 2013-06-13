@@ -117,13 +117,64 @@ void readBlankLine(vector<string>& errors, istream& in)
     errors.push_back(string("Text \"") + junk.substr(1) + string("\" ignored"));
 }
 
+class On : public Command
+{
+public:
+  On(const Dt& dt_) : dt(dt_) {}
+  void execute(State& state, vector<Dt>& dts, vector<string>& errors)
+  {
+    state.dt = dt;
+  }
+private:
+  Dt dt;
+};
+
+class Begin : public Command
+{
+public:
+  Begin(const Dt& begin_) : begin(begin_) {}
+  void execute(State& state, vector<Dt>& dts, vector<string>& errors)
+  {
+    state.begin = begin;
+  }
+private:
+  Dt begin;
+};
+
+class End : public Command
+{
+public:
+  End(const Dt& end_) : end(end_) {}
+  void execute(State& state, vector<Dt>& dts, vector<string>& errors)
+  {
+    state.end = end;
+  }
+private:
+  Dt end;
+};
+
+class Set : public Command
+{
+public:
+  void execute(State& state, vector<Dt>& dts, vector<string>& errors)
+  {
+    if (state.dt != Dt())
+      dts.push_back(state.dt);
+    else
+    {
+      errors.push_back(string("Token \"Set\" found without date"));
+    }
+  }
+};
+
 vector<string> Event::read(istream& in)
 {
   string token;
   vector<string> errors;
-  Dt begin, end, dt;
-  begin.dtSet(1900, Jan, 1);
-  end.dtSet(2100, Dec, 31);
+  State state;
+  Dt dt;
+  state.begin.dtSet(1900, Jan, 1);
+  state.end.dtSet(2100, Dec, 31);
   while (in >> token)
   {
     if (token == "Title")
@@ -138,18 +189,24 @@ vector<string> Event::read(istream& in)
         if (!in)
           errors.push_back("No \"EndOccurrence\" token found");
         else if (token == "On")
+        {
           readDate(errors, dt, in);
+          commands.push_back(new On(dt));
+        }
         else if (token == "Begin")
-          readDate(errors, begin, in);
+        {
+          readDate(errors, dt, in);
+          commands.push_back(new Begin(dt));
+        }
         else if (token == "End")
-          readDate(errors, end, in);
+        {
+          readDate(errors, dt, in);
+          commands.push_back(new End(dt));
+        }
         else if (token == "Set")
         {
           readBlankLine(errors, in);
-          if (dt != Dt())
-            dts.push_back(dt);
-          else
-            errors.push_back(string("Token \"Set\" found without date"));
+          commands.push_back(new Set());
         }
         else
           readInvalid(errors, token, in);
@@ -157,6 +214,10 @@ vector<string> Event::read(istream& in)
     }
     else
       readInvalid(errors, token, in);
+    for (vector<Command*>::iterator ci = commands.begin();
+         ci != commands.end();
+         ++ci)
+      (*ci)->execute(state, dts, errors);
   }
   return errors;
 }
