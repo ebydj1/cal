@@ -101,9 +101,10 @@ Err Dt::addMonths(int n)
   }
   else if (n < -mnew)
   {
-    ynew = y - -n / 12 - 1;
+    n += mnew - 11;
+    mnew = 11;
+    ynew = y - -n / 12;
     n = -(-n % 12);
-    mnew = m + 12;
   }
   mnew += n;
   if (ynew < 1900)
