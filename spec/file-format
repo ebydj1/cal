@@ -27,7 +27,7 @@ Occurrence - next line to End Occurrence label, subcommands
                          current month
                       to month Jun will always move to current day in June of
                          current year
-  Prev {day/week/month} - minus 1 day, 7 days, or 1 month
+  Prev {number} {day/week/month}(s)
   Set - have to finish a repetition rule with this to set the date
 Negcurrence - same as Occurrence, end at EndNegcurrence label
 Inherits - <file>.<type> # perhaps this should be thought out more subtly
