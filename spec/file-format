@@ -15,22 +15,21 @@ Occurrence - next line to End Occurrence label, subcommands
   On date, absolute
   Begin date, absolute or relative
   End date, absolute or relative
-  Recur relative rule
-    Every {day/week/month/year}
-    If {</>/=} {date or reference to date from another object}
-    While {</>/=}
-    Do - marks beginning of a repeatable block, such as after Every
-    Done - marks end of repeatable block
-    Next {number} {day/week/month/year}(s) - number assumed to be 1, s optional
-    To {day #/week #/month Name} - will stick in same level of next higher:
-                        to day 1 will always move to day 1 of current month
-                        to week 1 will always move to current day of week 1 of
-                           current month
-                        to month Jun will always move to current day in June of
-                           current year
-    Prev {day/week/month} - minus 1 day, 7 days, or 1 month
-    Set - have to finish a repetition rule with this to set the date
-Negcurrence - same as Occurrence, end at End Negcurrence label
+  Every {day/week/month/year}
+  If {</>/=} {date or reference to date from another object}
+  While {</>/=}
+  Do - marks beginning of a repeatable block, such as after Every
+  Done - marks end of repeatable block
+  Next {number} {day/week/month/year}(s) - number assumed to be 1, s optional
+  To {day #/week #/month Name} - will stick in same level of next higher:
+                      to day 1 will always move to day 1 of current month
+                      to week 1 will always move to current day of week 1 of
+                         current month
+                      to month Jun will always move to current day in June of
+                         current year
+  Prev {day/week/month} - minus 1 day, 7 days, or 1 month
+  Set - have to finish a repetition rule with this to set the date
+Negcurrence - same as Occurrence, end at EndNegcurrence label
 Inherits - <file>.<type> # perhaps this should be thought out more subtly
 # So, BD Adoration could be
 #   to day 1
