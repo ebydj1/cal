@@ -6,18 +6,36 @@ using std::ostringstream;
 
 string parseHelp(string str)
 {
-  for (string::iterator si = str.begin(); si != str.end(); ++si)
+  string::iterator si = str.begin();
+  while (si != str.end())
+  {
     if (isalpha(*si))
-      *si = 'a';
+    {
+      *si++ = 'a';
+      while (isalpha(*si))
+        str.erase(si);
+    }
     else if (isdigit(*si))
-      *si = '0';
+    {
+      *si++ = '0';
+      while (isdigit(*si))
+        str.erase(si);
+    }
+    else if (isspace(*si))
+    {
+      *si++ = ' ';
+      while (isspace(*si))
+        str.erase(si);
+    }
+    else ++si;
+  }
   return str;
 }
 
 bool parseDate(int& year, int& month, int& day, string date)
 {
   string parseddate = parseHelp(date);
-  if (parseddate != "aaa 00, 0000" && parseddate != "aaa 0, 0000")
+  if (parseddate != "a 0, 0")
     return false;
 
   istringstream ssdate(date);
