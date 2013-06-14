@@ -97,19 +97,22 @@ bool parseRel(int& num, int& type, string rel)
 
   if (parsedrel == "0 a")
     ssrel >> num;
-  else num = 1;
+  else num = -1;
 
   string stype;
   ssrel >> stype;
   if (stype == "day") type = Day;
   else if (stype == "month") type = Month;
   else if (stype == "year") type = Year;
-  else if (getWday(stype) != -1)
+  else if (num == -1 && getWday(stype) != -1)
   {
     num = getWday(stype);
     type = Wday;
   }
   else return false;
+
+  if (num == -1)
+    num = 1;
 
   return true;
 }
