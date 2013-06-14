@@ -1,26 +1,13 @@
 #ifndef EVENT_H
 #define EVENT_H
-#include <iostream>
 #include <istream>
 #include <string>
 #include <vector>
 using std::istream;
 using std::string;
 using std::vector;
-using std::cout;
-using std::endl;
 #include "Dt.h"
-
-struct State
-{
-  Dt begin, end, dt;
-};
-
-class Command
-{
-public:
-  virtual void execute(State&, vector<Dt>&, vector<string>&) = 0;
-};
+#include "Command.h"
 
 class Event
 {
