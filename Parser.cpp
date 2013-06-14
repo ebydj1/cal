@@ -6,6 +6,35 @@
 using std::istringstream;
 using std::ostringstream;
 
+int getWday(string str)
+{
+  if (str == "Sun") return Sun;
+  else if (str == "Mon") return Mon;
+  else if (str == "Tue") return Tue;
+  else if (str == "Wed") return Wed;
+  else if (str == "Thu") return Thu;
+  else if (str == "Fri") return Fri;
+  else if (str == "Sat") return Sat;
+  else return -1;
+}
+
+int getMonth(string str)
+{
+  if (str == "Jan") return Jan;
+  else if (str == "Feb") return Feb;
+  else if (str == "Mar") return Mar;
+  else if (str == "Apr") return Apr;
+  else if (str == "May") return May;
+  else if (str == "Jun") return Jun;
+  else if (str == "Jul") return Jul;
+  else if (str == "Aug") return Aug;
+  else if (str == "Sep") return Sep;
+  else if (str == "Oct") return Oct;
+  else if (str == "Nov") return Nov;
+  else if (str == "Dec") return Dec;
+  else return -1;
+}
+
 string parseHelp(string str)
 {
   string::iterator si = str.begin();
@@ -43,19 +72,9 @@ bool parseDate(int& year, int& month, int& day, string date)
   istringstream ssdate(date);
   string smonth;
   ssdate >> smonth;
-  if (smonth == "Jan") month = Jan;
-  else if (smonth == "Feb") month = Feb;
-  else if (smonth == "Mar") month = Mar;
-  else if (smonth == "Apr") month = Apr;
-  else if (smonth == "May") month = May;
-  else if (smonth == "Jun") month = Jun;
-  else if (smonth == "Jul") month = Jul;
-  else if (smonth == "Aug") month = Aug;
-  else if (smonth == "Sep") month = Sep;
-  else if (smonth == "Oct") month = Oct;
-  else if (smonth == "Nov") month = Nov;
-  else if (smonth == "Dec") month = Dec;
-  else return false;
+  month = getMonth(smonth);
+  if (month == -1)
+    return false;
 
   ssdate >> day;
 
@@ -82,10 +101,10 @@ bool parseRel(int& num, int& type, string rel)
 
   string stype;
   ssrel >> stype;
-  if (stype == "day" || stype == "days") type = Day;
-  else if (stype == "week" || stype == "weeks") type = Week;
-  else if (stype == "month" || stype == "months") type = Month;
-  else if (stype == "year" || stype == "years") type = Year;
+  if (stype == "day") type = Day;
+  else if (stype == "week") type = Week;
+  else if (stype == "month") type = Month;
+  else if (stype == "year") type = Year;
   else return false;
 
   return true;
