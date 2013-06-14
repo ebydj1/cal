@@ -9,6 +9,8 @@ using std::string;
 using std::vector;
 
 string parseHelp(string str);
+int getWday(string str);
+int getMonth(string str);
 bool parseDate(int& year, int& month, int& day, string date);
 bool parseRel(int& num, int& type, string rel);
 void readTitle(vector<string>& errors, string& title, istream& in);

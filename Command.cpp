@@ -44,12 +44,12 @@ void Next::execute(State& state, vector<Dt>& dts, vector<string>& errors)
   Dt dttemp = state.dt;
   if (type == Day)
     e = dttemp.addDays(num);
-  else if (type == Week)
-    e = dttemp.addDays(num*7);
   else if (type == Month)
     e = dttemp.addMonths(num);
   else if (type == Year)
     e = dttemp.addYears(num);
+  else if (type == Wday)
+    e = dttemp.addDays((num + 7 - dttemp.weekday()) % 7);
   if (e.type == overflow)
   {
     string output;
@@ -57,8 +57,21 @@ void Next::execute(State& state, vector<Dt>& dts, vector<string>& errors)
     ssoutput << "Command \"Next " << num << " ";
     if (type == Day)
       ssoutput << "day";
-    else if (type == Week)
-      ssoutput << "week";
+    else if (type == Wday)
+      if (num == Sun)
+        ssoutput << "Sun";
+      else if (num == Mon)
+        ssoutput << "Mon";
+      else if (num == Tue)
+        ssoutput << "Tue";
+      else if (num == Wed)
+        ssoutput << "Wed";
+      else if (num == Thu)
+        ssoutput << "Thu";
+      else if (num == Fri)
+        ssoutput << "Fri";
+      else
+        ssoutput << "Sat";
     else if (type == Month)
       ssoutput << "month";
     else if (type == Year)
@@ -80,12 +93,12 @@ void Prev::execute(State& state, vector<Dt>& dts, vector<string>& errors)
   Dt dttemp = state.dt;
   if (type == Day)
     e = dttemp.addDays(-num);
-  else if (type == Week)
-    e = dttemp.addDays(-num*7);
   else if (type == Month)
     e = dttemp.addMonths(-num);
   else if (type == Year)
     e = dttemp.addYears(-num);
+  else if (type == Wday)
+    e = dttemp.addDays(-((dttemp.weekday() + 7 - num) % 7));
   if (e.type == underflow)
   {
     string output;
@@ -93,8 +106,21 @@ void Prev::execute(State& state, vector<Dt>& dts, vector<string>& errors)
     ssoutput << "Command \"Prev " << num << " ";
     if (type == Day)
       ssoutput << "day";
-    else if (type == Week)
-      ssoutput << "week";
+    else if (type == Wday)
+      if (num == Sun)
+        ssoutput << "Sun";
+      else if (num == Mon)
+        ssoutput << "Mon";
+      else if (num == Tue)
+        ssoutput << "Tue";
+      else if (num == Wed)
+        ssoutput << "Wed";
+      else if (num == Thu)
+        ssoutput << "Thu";
+      else if (num == Fri)
+        ssoutput << "Fri";
+      else
+        ssoutput << "Sat";
     else if (type == Month)
       ssoutput << "month";
     else if (type == Year)

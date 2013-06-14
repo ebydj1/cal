@@ -102,9 +102,13 @@ bool parseRel(int& num, int& type, string rel)
   string stype;
   ssrel >> stype;
   if (stype == "day") type = Day;
-  else if (stype == "week") type = Week;
   else if (stype == "month") type = Month;
   else if (stype == "year") type = Year;
+  else if (getWday(stype) != -1)
+  {
+    num = getWday(stype);
+    type = Wday;
+  }
   else return false;
 
   return true;
@@ -172,11 +176,17 @@ void readDate(vector<string>& errors, Dt& date, istream& in)
 
 void readRel(vector<string>& errors, int& num, int& type, istream& in)
 {
+  int numtemp, typetemp;
   string srel;
   getline(in, srel);
   srel = srel.substr(1);
-  if (parseRel(num, type, srel) == false)
+  if (parseRel(numtemp, typetemp, srel) == false)
     errors.push_back(string("Relative date ") + srel + string(" invalid"));
+  else
+  {
+    num = numtemp;
+    type = typetemp;
+  }
 }
 
 void readInvalid(vector<string>& errors, string token, istream& in)
