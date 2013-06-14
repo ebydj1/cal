@@ -20,14 +20,15 @@ Occurrence - next line to End Occurrence label, subcommands
   While {</>/=}
   Do - marks beginning of a repeatable block, such as after Every
   Done - marks end of repeatable block
-  Next {number} {day/week/month/year}(s) - number assumed to be 1, s optional
-  To {day #/week #/month Name} - will stick in same level of next higher:
-                      to day 1 will always move to day 1 of current month
-                      to week 1 will always move to current day of week 1 of
-                         current month
-                      to month Jun will always move to current day in June of
-                         current year
-  Prev {number} {day/week/month}(s)
+  Next (number) {day/week/month/year}(s)
+  Next {weekday} - changes date by 0 to 6 days
+  Prev {number} {day/week/month/year}(s)
+  Prev {weekday} - changes date by 0 to 6 days
+  To {day #/weekday/month Name} - will stick in same level of next higher:
+    To day 1 will always move to day 1 of current month
+    To Sun will always move to the Sunday of the current week
+    To month Jun will always move to current day in June of
+      current year
   Set - have to finish a repetition rule with this to set the date
 Negcurrence - same as Occurrence, end at EndNegcurrence label
 Inherits - <file>.<type> # perhaps this should be thought out more subtly
