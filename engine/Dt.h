@@ -4,17 +4,14 @@
 
 enum Err
 {
-  goodt = 0, invalid_yr, invalid_day, overflow, underflow
+  goodt = 0, invalid_yr, invalid_day
 };
 
 class Dt
 {
 public:
   Dt() : y(0), m(0), d(0) {}
-  Err dtSet(int y_, int m_, int d_);
-  Err setDay(int);
-  Err setMonth(int);
-  Err setYear(int);
+  Err setDate(int y_, int m_, int d_);
   Err addDays(int);
   Err addMonths(int);
   Err addYears(int);
@@ -31,6 +28,8 @@ public:
   bool operator==(const Dt&) const;
   bool operator!=(const Dt&) const;
 private:
+  Err change(int y_, int m_, int d_);
+
   int y;
   int m;
   int d;

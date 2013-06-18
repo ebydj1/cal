@@ -159,7 +159,7 @@ void readDate(vector<string>& errors, Dt& date, istream& in)
     errors.push_back(string("Date ") + sdate + string(" invalid"));
   else
   {
-    Err e = date.dtSet(year, month, day);
+    Err e = date.setDate(year, month, day);
     if (e == invalid_yr)
     {
       string syear;

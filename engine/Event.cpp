@@ -7,8 +7,8 @@ vector<string> Event::read(istream& in)
   vector<string> errors;
   State state;
   Dt dt;
-  state.begin.dtSet(1900, Jan, 1);
-  state.end.dtSet(2100, Dec, 31);
+  state.begin.setDate(1900, Jan, 1);
+  state.end.setDate(2100, Dec, 31);
   while (in >> token)
   {
     if (token == "Title")

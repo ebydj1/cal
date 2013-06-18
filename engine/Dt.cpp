@@ -11,7 +11,7 @@ inline int diny(int y) { return 365 + (leap(y) ? 1 : 0); }
 
 inline int dinm(int y, int m)
 {
-  return (!leap(y) || m!= Feb) ? ydom[m + 1] - ydom[m] : 29;
+  return (!leap(y) || m != Feb) ? ydom[m + 1] - ydom[m] : 29;
 }
 
 inline int doy(int y, int m, int d)
@@ -30,12 +30,12 @@ inline int nleap(int start, int end)
     + (leap(start) ? 1 : 0);
 }
 
-Err Dt::dtSet(int y_, int m_, int d_)
+Err Dt::setDate(int y_, int m_, int d_)
 {
-  --d_;
-  if (y_ < 1900 || y_ > 2100)
+  return change(y_, m_, --d_);
+  if (y < 1900 || y > 2100)
     return invalid_yr;
-  if (d_ >= dinm(y_, m_) || d_ < 0)
+  if (d < 0 || d >= dinm(y, m))
     return invalid_day;
   y = y_;
   m = m_;
@@ -79,14 +79,8 @@ Err Dt::addDays(int n)
       }
     }
   }
-  if (ynew < 1900)
-    return underflow;
-  else if (ynew > 2100)
-    return overflow;
-  y = ynew;
-  m = mnew;
-  d = dnew;
-  return goodt;
+
+  return change(ynew, mnew, dnew);
 }
 
 Err Dt::addMonths(int n)
@@ -107,24 +101,15 @@ Err Dt::addMonths(int n)
     n = -(-n % 12);
   }
   mnew += n;
-  if (ynew < 1900)
-    return underflow;
-  else if (ynew > 2100)
-    return overflow;
-  y = ynew;
-  m = mnew;
-  return goodt;
+
+  return change(ynew, mnew, d);
 }
 
 Err Dt::addYears(int n)
 {
   int ynew = y + n;
-  if (ynew < 1900)
-    return underflow;
-  else if (ynew > 2100)
-    return overflow;
-  y = ynew;
-  return goodt;
+
+  return change(ynew, m, d);
 }
 
 int Dt::year() const { return y; }
@@ -210,4 +195,16 @@ bool Dt::operator!=(const Dt& rval) const
 {
   const Dt& lval = *this;
   return lval.y != rval.y || lval.m != rval.m || lval.d != rval.d;
+}
+
+Err Dt::change(int y_, int m_, int d_)
+{
+  if (y_ < 1900 || y_ > 2100)
+    return invalid_yr;
+  if (d_ < 0 || d_ >= dinm(y_, m_))
+    return invalid_day;
+  y = y_;
+  m = m_;
+  d = d_;
+  return goodt;
 }

@@ -48,7 +48,7 @@ int main()
   for (vector<Event>::iterator ei = events.begin(); ei != events.end(); ++ei)
     cal.add(ei);
   Dt dt;
-  dt.dtSet(2013, Jun, 8);
+  dt.setDate(2013, Jun, 8);
   vector<Event*> pevents = cal.getEvents(dt);
   for (vector<Event*>::iterator epi = pevents.begin();
        epi != pevents.end();
