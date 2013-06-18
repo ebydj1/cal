@@ -160,14 +160,14 @@ void readDate(vector<string>& errors, Dt& date, istream& in)
   else
   {
     Err e = date.dtSet(year, month, day);
-    if (e.type == invalid_yr)
+    if (e == invalid_yr)
     {
       string syear;
       ostringstream os(syear);
       os << year;
       errors.push_back(string("Invalid year ") + syear);
     }
-    else if (e.type == invalid_day)
+    else if (e == invalid_day)
     {
       string sday;
       ostringstream os(sday);

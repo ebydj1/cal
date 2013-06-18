@@ -34,13 +34,13 @@ Err Dt::dtSet(int y_, int m_, int d_)
 {
   --d_;
   if (y_ < 1900 || y_ > 2100)
-    return Err(dt_set, invalid_yr);
+    return invalid_yr;
   if (d_ >= dinm(y_, m_) || d_ < 0)
-    return Err(dt_set, invalid_day);
+    return invalid_day;
   y = y_;
   m = m_;
   d = d_;
-  return Err();
+  return goodt;
 }
 
 Err Dt::addDays(int n)
@@ -80,13 +80,13 @@ Err Dt::addDays(int n)
     }
   }
   if (ynew < 1900)
-    return Err(add_days, underflow);
+    return underflow;
   else if (ynew > 2100)
-    return Err(add_days, overflow);
+    return overflow;
   y = ynew;
   m = mnew;
   d = dnew;
-  return Err();
+  return goodt;
 }
 
 Err Dt::addMonths(int n)
@@ -108,23 +108,23 @@ Err Dt::addMonths(int n)
   }
   mnew += n;
   if (ynew < 1900)
-    return Err(add_months, underflow);
+    return underflow;
   else if (ynew > 2100)
-    return Err(add_months, overflow);
+    return overflow;
   y = ynew;
   m = mnew;
-  return Err();
+  return goodt;
 }
 
 Err Dt::addYears(int n)
 {
   int ynew = y + n;
   if (ynew < 1900)
-    return Err(add_years, underflow);
+    return underflow;
   else if (ynew > 2100)
-    return Err(add_years, overflow);
+    return overflow;
   y = ynew;
-  return Err();
+  return goodt;
 }
 
 int Dt::year() const { return y; }

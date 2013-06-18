@@ -50,7 +50,7 @@ void Next::execute(State& state, vector<Dt>& dts, vector<string>& errors)
     e = dttemp.addYears(num);
   else if (type == Wday)
     e = dttemp.addDays((num + 7 - dttemp.weekday()) % 7);
-  if (e.type == overflow)
+  if (e == overflow)
   {
     string output;
     ostringstream ssoutput(output);
@@ -99,7 +99,7 @@ void Prev::execute(State& state, vector<Dt>& dts, vector<string>& errors)
     e = dttemp.addYears(-num);
   else if (type == Wday)
     e = dttemp.addDays(-((dttemp.weekday() + 7 - num) % 7));
-  if (e.type == underflow)
+  if (e == underflow)
   {
     string output;
     ostringstream ssoutput(output);

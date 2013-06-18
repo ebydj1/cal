@@ -9,31 +9,31 @@ int main()
   Err e;
   int w;
   e = d.dtSet(0, Jan, 0);
-  if (e.type != invalid_yr)
+  if (e != invalid_yr)
     cerr << "no error when giving a bad year" << endl;
   e = d.dtSet(1900, Jan, 0);
-  if (e.type != invalid_day)
+  if (e != invalid_day)
     cerr << "no error when giving a stupid day" << endl;
   e = d.dtSet(1900, Mar, 32);
-  if (e.type != invalid_day)
+  if (e != invalid_day)
     cerr << "no error when giving a day too high" << endl;
   e = d.dtSet(1900, Feb, 29);
-  if (e.type != invalid_day)
+  if (e != invalid_day)
     cerr << "no error when giving an invalid leap day" << endl;
   e = d.dtSet(1904, Feb, 29);
-  if (e.type != goodt)
+  if (e != goodt)
     cerr << "error when giving a valid leap day" << endl;
   e = d.dtSet(2000, Feb, 29);
-  if (e.type != goodt)
+  if (e != goodt)
     cerr << "no error when giving a valid leap day on Y2K" << endl;
   e = d.dtSet(1900, Jan, 1);
-  if (e.type != goodt)
+  if (e != goodt)
     cerr << "error when giving a valid day" << endl;
   w = d.weekday();
   if (w != Mon)
     cerr << "January 1, 1900 not indicated as a Monday" << endl;
   e = d.dtSet(2013, Jun, 9);
-  if (e.type != goodt)
+  if (e != goodt)
     cerr << "error when giving a valid day" << endl;
   w = d.weekday();
   if (w != Sun)
