@@ -214,7 +214,7 @@ bool Dt::operator!=(const Dt& rval) const
 
 Err Dt::change(int y_, int m_, int d_)
 {
-  if (y_ < 1900 || y_ > 2100)
+  if (y_ < MIN_YEAR || y_ > MAX_YEAR)
     return invalid_yr;
   if (m_ > Dec)
     return invalid_mo;

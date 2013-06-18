@@ -7,6 +7,9 @@ enum Err
   goodt = 0, invalid_yr, invalid_mo, invalid_day
 };
 
+const int MIN_YEAR = 1900;
+const int MAX_YEAR = 2100;
+
 class Dt
 {
 public:
