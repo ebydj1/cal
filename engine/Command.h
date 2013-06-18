@@ -67,6 +67,16 @@ private:
   int type;
 };
 
+class To : public Command
+{
+public:
+  To(vector<string>& errors, istream& in);
+  void execute(State& state, vector<Dt>& dts, vector<string>& errors);
+private:
+  int num;
+  int type;
+};
+
 class Set : public Command
 {
 public:

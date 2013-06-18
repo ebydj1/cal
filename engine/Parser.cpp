@@ -117,6 +117,46 @@ bool parseRel(int& num, int& type, string rel)
   return true;
 }
 
+bool parseTo(int& num, int& type, string to)
+{
+  string parsedto = parseHelp(to);
+  if (parsedto != "0" && parsedto != "a")
+    return false;
+
+  string str;
+  int tempnum, temptype;
+  istringstream ssto(to);
+  if (parsedto == "0")
+  {
+    ssto >> tempnum;
+    if (tempnum <= 31)
+      temptype = Day;
+    else if (tempnum >= MIN_YEAR && tempnum <= MAX_YEAR)
+      temptype = Year;
+    else temptype = -1;
+  }
+  else
+  {
+    ssto >> str;
+    if (getWday(str) != -1)
+    {
+      tempnum = getWday(str);
+      temptype = Wday;
+    }
+    else if (getMonth(str) != -1)
+    {
+      tempnum = getMonth(str);
+      temptype = Month;
+    }
+    else temptype = -1;
+  }
+  if (temptype == -1)
+    return false;
+  num = tempnum;
+  type = temptype;
+  return true;
+}
+
 void readTitle(vector<string>& errors, string& title, istream& in)
 {
   char junk;
@@ -162,17 +202,15 @@ void readDate(vector<string>& errors, Dt& date, istream& in)
     Err e = date.setDate(year, month, day);
     if (e == invalid_yr)
     {
-      string syear;
-      ostringstream os(syear);
+      ostringstream os;
       os << year;
-      errors.push_back(string("Invalid year ") + syear);
+      errors.push_back(string("Invalid year ") + os.str());
     }
     else if (e == invalid_day)
     {
-      string sday;
-      ostringstream os(sday);
+      ostringstream os;
       os << day;
-      errors.push_back(string("Invalid day ") + sday);
+      errors.push_back(string("Invalid day ") + os.str());
     }
   }
 }
@@ -185,6 +223,21 @@ void readRel(vector<string>& errors, int& num, int& type, istream& in)
   srel = srel.substr(1);
   if (parseRel(numtemp, typetemp, srel) == false)
     errors.push_back(string("Relative date ") + srel + string(" invalid"));
+  else
+  {
+    num = numtemp;
+    type = typetemp;
+  }
+}
+
+void readTo(vector<string>& errors, int& num, int& type, istream& in)
+{
+  int numtemp, typetemp;
+  string sto;
+  getline(in, sto);
+  sto = sto.substr(1);
+  if (parseTo(numtemp, typetemp, sto) == false)
+    errors.push_back(string("To date ") + sto + string(" invalid"));
   else
   {
     num = numtemp;

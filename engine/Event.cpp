@@ -32,6 +32,8 @@ vector<string> Event::read(istream& in)
           commands.push_back(new Next(errors, in));
         else if (token == "Prev")
           commands.push_back(new Prev(errors, in));
+        else if (token == "To")
+          commands.push_back(new To(errors, in));
         else if (token == "Set")
           commands.push_back(new Set(errors, in));
         else

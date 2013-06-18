@@ -50,10 +50,9 @@ void Next::execute(State& state, vector<Dt>& dts, vector<string>& errors)
     e = dttemp.addYears(num);
   else if (type == Wday)
     e = dttemp.addDays((num + 7 - dttemp.weekday()) % 7);
-  if (e == invalid_yr)
+  if (e != goodt)
   {
-    string output;
-    ostringstream ssoutput(output);
+    ostringstream ssoutput;
     ssoutput << "Command \"Next " << num << " ";
     if (type == Day)
       ssoutput << "day";
@@ -76,8 +75,8 @@ void Next::execute(State& state, vector<Dt>& dts, vector<string>& errors)
       ssoutput << "month";
     else if (type == Year)
       ssoutput << "year";
-    ssoutput << " generated an invalid date";
-    errors.push_back(output);
+    ssoutput << "\" generated an invalid date";
+    errors.push_back(ssoutput.str());
   }
   else state.dt = dttemp;
 }
@@ -99,10 +98,9 @@ void Prev::execute(State& state, vector<Dt>& dts, vector<string>& errors)
     e = dttemp.addYears(-num);
   else if (type == Wday)
     e = dttemp.addDays(-((dttemp.weekday() + 7 - num) % 7));
-  if (e == invalid_yr)
+  if (e != goodt)
   {
-    string output;
-    ostringstream ssoutput(output);
+    ostringstream ssoutput;
     ssoutput << "Command \"Prev " << num << " ";
     if (type == Day)
       ssoutput << "day";
@@ -125,8 +123,77 @@ void Prev::execute(State& state, vector<Dt>& dts, vector<string>& errors)
       ssoutput << "month";
     else if (type == Year)
       ssoutput << "year";
-    ssoutput << " generated an invalid date";
-    errors.push_back(output);
+    ssoutput << "\" generated an invalid date";
+    errors.push_back(ssoutput.str());
+  }
+  else state.dt = dttemp;
+}
+
+To::To(vector<string>& errors, istream& in)
+{
+  readTo(errors, num, type, in);
+}
+
+void To::execute(State& state, vector<Dt>& dts, vector<string>& errors)
+{
+  Err e;
+  Dt dttemp = state.dt;
+  if (type == Day)
+    e = dttemp.setDay(num);
+  else if (type == Month)
+    e = dttemp.setMonth(num);
+  else if (type == Year)
+    e = dttemp.setYear(num);
+  else if (type == Wday)
+    e = dttemp.addDays(num - dttemp.weekday());
+  if (e != goodt)
+  {
+    ostringstream ssoutput;
+    ssoutput << "Command \"To ";
+    if (type == Day || type == Year)
+      ssoutput << num;
+    else if (type == Wday)
+      if (num == Sun)
+        ssoutput << "Sun";
+      else if (num == Mon)
+        ssoutput << "Mon";
+      else if (num == Tue)
+        ssoutput << "Tue";
+      else if (num == Wed)
+        ssoutput << "Wed";
+      else if (num == Thu)
+        ssoutput << "Thu";
+      else if (num == Fri)
+        ssoutput << "Fri";
+      else
+        ssoutput << "Sat";
+    else if (type == Month)
+      if (num == Jan)
+        ssoutput << "Jan";
+      else if (num == Feb)
+        ssoutput << "Feb";
+      else if (num == Mar)
+        ssoutput << "Mar";
+      else if (num == Apr)
+        ssoutput << "Apr";
+      else if (num == May)
+        ssoutput << "May";
+      else if (num == Jun)
+        ssoutput << "Jun";
+      else if (num == Jul)
+        ssoutput << "Jul";
+      else if (num == Aug)
+        ssoutput << "Aug";
+      else if (num == Sep)
+        ssoutput << "Sep";
+      else if (num == Oct)
+        ssoutput << "Oct";
+      else if (num == Nov)
+        ssoutput << "Nov";
+      else
+        ssoutput << "Dec";
+    ssoutput << "\" generated an invalid date";
+    errors.push_back(ssoutput.str());
   }
   else state.dt = dttemp;
 }
