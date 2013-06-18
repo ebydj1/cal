@@ -43,6 +43,21 @@ Err Dt::setDate(int y_, int m_, int d_)
   return goodt;
 }
 
+Err Dt::setYear(int y_)
+{
+  return change(y_, m, d);
+}
+
+Err Dt::setMonth(int m_)
+{
+  return change(y, m_, d);
+}
+
+Err Dt::setDay(int d_)
+{
+  return change(y, m, d_);
+}
+
 Err Dt::addDays(int n)
 {
   int ynew = y, mnew = m, dnew = d;
@@ -201,6 +216,8 @@ Err Dt::change(int y_, int m_, int d_)
 {
   if (y_ < 1900 || y_ > 2100)
     return invalid_yr;
+  if (m_ > Dec)
+    return invalid_mo;
   if (d_ < 0 || d_ >= dinm(y_, m_))
     return invalid_day;
   y = y_;

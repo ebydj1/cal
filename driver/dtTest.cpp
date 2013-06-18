@@ -38,6 +38,24 @@ int main()
   w = d.weekday();
   if (w != Sun)
     cerr << "June 9, 2013 not indicated as a Sunday" << endl;
+  e = d.setDate(2012, Feb, 29);
+  if (e != goodt)
+    cerr << "error when giving a valid leap day" << endl;
+  e = d.setYear(2013);
+  if (e != invalid_day)
+    cerr << "error when moving by year to an invalid day" << endl;
+  e = d.setDate(2012, Mar, 31);
+  if (e != goodt)
+    cerr << "error when giving a valid day" << endl;
+  e = d.setMonth(Feb);
+  if (e != invalid_day)
+    cerr << "error when moving by month to an invalid day" << endl;
+  e = d.setDate(2012, Apr, 30);
+  if (e != goodt)
+    cerr << "error when giving a valid day" << endl;
+  e = d.setDay(31);
+  if (e != invalid_day)
+    cerr << "error when moving by month to an invalid day" << endl;
 
   // comparison tests
   Dt d1, d2, d3, d4;

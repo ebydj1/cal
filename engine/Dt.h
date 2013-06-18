@@ -4,7 +4,7 @@
 
 enum Err
 {
-  goodt = 0, invalid_yr, invalid_day
+  goodt = 0, invalid_yr, invalid_mo, invalid_day
 };
 
 class Dt
@@ -12,6 +12,9 @@ class Dt
 public:
   Dt() : y(0), m(0), d(0) {}
   Err setDate(int y_, int m_, int d_);
+  Err setYear(int);
+  Err setMonth(int);
+  Err setDay(int);
   Err addDays(int);
   Err addMonths(int);
   Err addYears(int);
