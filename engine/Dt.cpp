@@ -55,7 +55,7 @@ Err Dt::setMonth(int m_)
 
 Err Dt::setDay(int d_)
 {
-  return change(y, m, d_);
+  return change(y, m, --d_);
 }
 
 Err Dt::addDays(int n)
